@@ -24,21 +24,41 @@
         .faq-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
         }
         .faq-icon {
             transition: transform 0.3s ease;
         }
         .faq-item.active .faq-content {
             max-height: 200px; /* Large enough to fit content */
-            transition: max-height 0.5s ease-in-out;
+            transition: max-height 0.3s ease-in-out;
+            opacity: 1;
+            margin-top: 1rem; /* Add spacing when open */
         }
         .faq-item.active .faq-icon {
             transform: rotate(180deg);
         }
         .faq-item.active {
             border-color: #3b82f6; /* Blue-500 */
-            background-color: #eff6ff; /* Blue-50 */
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1), 0 2px 4px -1px rgba(59, 130, 246, 0.06);
+        }
+        /* Custom scrollbar for aesthetics */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Carousel Styles */
+        .carousel-track {
+            transition: transform 0.5s ease-in-out;
+        }
+        .dot {
+            transition: all 0.3s ease;
+        }
+        .dot.active {
+            background-color: #3b82f6; /* Blue-600 */
+            width: 24px; /* Instagram style elongated active dot */
         }
     </style>
 </head>
@@ -74,6 +94,7 @@
                 <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-slate-50">Features</a>
                 <a href="#benefits" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-slate-50">Security</a>
                 <a href="#faq" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-slate-50">FAQ</a>
+                <a href="#testimonials" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-slate-50">Stories</a>
                 <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-slate-50">Log In</a>
                 <a href="#" class="block w-full text-center mt-4 bg-blue-600 text-white px-5 py-3 rounded-lg font-medium">Get Started</a>
             </div>
@@ -257,71 +278,233 @@
         </div>
     </section>
 
-    <section id="faq" class="py-24 bg-white relative">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="testimonials" class="hero-gradient py-24 overflow-hidden relative">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-0 pointer-events-none">
+            <div class="absolute top-20 -left-20 w-72 h-72 bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
+            <div class="absolute bottom-20 -right-20 w-72 h-72 bg-purple-600 rounded-full blur-[100px] opacity-20"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
-                <p class="text-lg text-slate-600">Got questions? We've got answers.</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Community Stories</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">Hear from the people already working at the speed of light.</p>
             </div>
 
-            <div class="space-y-4">
-                <div class="faq-item group border border-slate-200 rounded-2xl overflow-hidden hover:border-blue-300 transition-all duration-300 bg-slate-50">
-                    <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none cursor-pointer" onclick="toggleFaq(this)">
-                        <div class="flex items-center gap-4">
-                            <i data-lucide="briefcase" class="h-5 w-5 text-blue-600"></i>
-                            <span class="font-bold text-lg text-slate-900">How do I post a job?</span>
+            <div class="relative max-w-4xl mx-auto">
+                <button id="prev-btn" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 z-20 bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-full shadow-lg border border-slate-700 transition group focus:outline-none">
+                    <i data-lucide="chevron-left" class="h-6 w-6 group-hover:text-blue-400 transition"></i>
+                </button>
+                <button id="next-btn" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 z-20 bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-full shadow-lg border border-slate-700 transition group focus:outline-none">
+                    <i data-lucide="chevron-right" class="h-6 w-6 group-hover:text-blue-400 transition"></i>
+                </button>
+
+                <div class="overflow-hidden py-8 px-4">
+                    <div id="carousel-track" class="carousel-track flex">
+                        
+                        <div class="min-w-full p-4">
+                            <div class="bg-slate-800/80 backdrop-blur-sm p-8 md:p-10 rounded-3xl border border-slate-700 shadow-xl h-full flex flex-col relative">
+                                <div class="absolute top-6 right-8 text-6xl text-blue-400 opacity-20 font-serif">"</div>
+                                <div class="flex-grow">
+                                    <p class="text-xl md:text-2xl font-medium text-slate-100 leading-relaxed relative z-10">
+                                        Very Promising Platform and Startup. The experience has been seamless from day one.
+                                    </p>
+                                </div>
+                                <div class="mt-8 flex items-center">
+                                    <div class="h-14 w-14 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl mr-4 shadow-md shadow-blue-500/30">
+                                        PB
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Priyanka Begani</h4>
+                                        <p class="text-slate-500">Home Owner</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <i data-lucide="chevron-down" class="faq-icon h-5 w-5 text-slate-400 group-hover:text-blue-600"></i>
-                    </button>
-                    <div class="faq-content bg-white px-6">
-                        <p class="pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
-                            Simply sign up, describe your task, set your budget, and our AI will match you with verified workers within seconds.
-                        </p>
+
+                        <div class="min-w-full p-4">
+                            <div class="bg-slate-800/80 backdrop-blur-sm p-8 md:p-10 rounded-3xl border border-slate-700 shadow-xl h-full flex flex-col relative">
+                                <div class="absolute top-6 right-8 text-6xl text-blue-400 opacity-20 font-serif">"</div>
+                                <div class="flex-grow">
+                                    <p class="text-xl md:text-2xl font-medium text-slate-100 leading-relaxed relative z-10">
+                                        SwiftGig can help me earn consistent income. Waiting for the launch, the beta was incredible.
+                                    </p>
+                                </div>
+                                <div class="mt-8 flex items-center">
+                                    <div class="h-14 w-14 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl mr-4 shadow-md shadow-blue-500/30">
+                                        RP
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Raj Patel</h4>
+                                        <p class="text-slate-500">Independent Worker</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="min-w-full p-4">
+                            <div class="bg-slate-800/80 backdrop-blur-sm p-8 md:p-10 rounded-3xl border border-slate-700 shadow-xl h-full flex flex-col relative">
+                                <div class="absolute top-6 right-8 text-6xl text-blue-400 opacity-20 font-serif">"</div>
+                                <div class="flex-grow">
+                                    <p class="text-xl md:text-2xl font-medium text-slate-100 leading-relaxed relative z-10">
+                                        The verification process gives me so much peace of mind. I know exactly who I'm hiring.
+                                    </p>
+                                </div>
+                                <div class="mt-8 flex items-center">
+                                    <div class="h-14 w-14 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl mr-4 shadow-md shadow-blue-500/30">
+                                        AS
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Anjali Singh</h4>
+                                        <p class="text-slate-500">Frequent Client</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="min-w-full p-4">
+                            <div class="bg-slate-800/80 backdrop-blur-sm p-8 md:p-10 rounded-3xl border border-slate-700 shadow-xl h-full flex flex-col relative">
+                                <div class="absolute top-6 right-8 text-6xl text-blue-400 opacity-20 font-serif">"</div>
+                                <div class="flex-grow">
+                                    <p class="text-xl md:text-2xl font-medium text-slate-100 leading-relaxed relative z-10">
+                                        The instant matching is a game changer for my company. We fill urgent roles in minutes now.
+                                    </p>
+                                </div>
+                                <div class="mt-8 flex items-center">
+                                    <div class="h-14 w-14 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl mr-4 shadow-md shadow-blue-500/30">
+                                        AK
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Amit Kumar</h4>
+                                        <p class="text-slate-500">Business Owner</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="min-w-full p-4">
+                            <div class="bg-slate-800/80 backdrop-blur-sm p-8 md:p-10 rounded-3xl border border-slate-700 shadow-xl h-full flex flex-col relative">
+                                <div class="absolute top-6 right-8 text-6xl text-blue-400 opacity-20 font-serif">"</div>
+                                <div class="flex-grow">
+                                    <p class="text-xl md:text-2xl font-medium text-slate-100 leading-relaxed relative z-10">
+                                        I love the transparent pricing and premium support! Finally a platform that treats freelancers fairly.
+                                    </p>
+                                </div>
+                                <div class="mt-8 flex items-center">
+                                    <div class="h-14 w-14 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl mr-4 shadow-md shadow-blue-500/30">
+                                        SL
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Sara Lee</h4>
+                                        <p class="text-slate-500">Freelancer</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="faq-item group border border-slate-200 rounded-2xl overflow-hidden hover:border-blue-300 transition-all duration-300 bg-slate-50">
-                    <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none cursor-pointer" onclick="toggleFaq(this)">
-                        <div class="flex items-center gap-4">
-                            <i data-lucide="shield" class="h-5 w-5 text-green-600"></i>
-                            <span class="font-bold text-lg text-slate-900">Are workers really verified?</span>
-                        </div>
-                        <i data-lucide="chevron-down" class="faq-icon h-5 w-5 text-slate-400 group-hover:text-blue-600"></i>
-                    </button>
-                    <div class="faq-content bg-white px-6">
-                        <p class="pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
-                            Yes! All workers undergo KYC verification, identity checks, and background screening for your safety.
-                        </p>
+                <div id="dots-nav" class="flex justify-center gap-2 mt-4">
+                    <button class="dot w-3 h-3 rounded-full bg-slate-600"></button>
+                    <button class="dot w-3 h-3 rounded-full bg-slate-600"></button>
+                    <button class="dot w-3 h-3 rounded-full bg-slate-600"></button>
+                    <button class="dot w-3 h-3 rounded-full bg-slate-600"></button>
+                    <button class="dot w-3 h-3 rounded-full bg-slate-600"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-24 bg-slate-50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-12 gap-12 items-start">
+                
+                <div class="md:col-span-4 sticky top-24">
+                    <span class="text-blue-600 font-semibold tracking-wide uppercase text-sm">Support</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-4">Frequently Asked Questions</h2>
+                    <p class="text-lg text-slate-600 mb-8">Everything you need to know about Swift Gig. Can't find the answer you're looking for?</p>
+                    
+                    <a href="#" class="inline-flex items-center gap-2 text-blue-600 font-bold hover:text-blue-700 transition group">
+                        Chat to our team
+                        <i data-lucide="arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    
+                    <div class="mt-8 p-6 bg-blue-50 rounded-2xl border border-blue-100">
+                        <h4 class="font-bold text-slate-900 mb-2">Still confused?</h4>
+                        <p class="text-sm text-slate-600 mb-4">Our support team is available 24/7 to help you with any issues.</p>
+                        <button class="w-full bg-white text-blue-600 border border-blue-200 hover:border-blue-400 font-semibold py-2 rounded-lg transition shadow-sm">
+                            Contact Support
+                        </button>
                     </div>
                 </div>
 
-                <div class="faq-item group border border-slate-200 rounded-2xl overflow-hidden hover:border-blue-300 transition-all duration-300 bg-slate-50">
-                    <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none cursor-pointer" onclick="toggleFaq(this)">
-                        <div class="flex items-center gap-4">
-                            <i data-lucide="lock" class="h-5 w-5 text-blue-600"></i>
-                            <span class="font-bold text-lg text-slate-900">How is payment protected?</span>
+                <div class="md:col-span-8 space-y-4">
+                    <div class="faq-item group border border-slate-200 rounded-2xl bg-white overflow-hidden hover:border-blue-300 transition-all duration-300 shadow-sm hover:shadow-md">
+                        <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none cursor-pointer" onclick="toggleFaq(this)">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-blue-50 p-2 rounded-lg group-hover:bg-blue-100 transition-colors">
+                                    <i data-lucide="briefcase" class="h-5 w-5 text-blue-600"></i>
+                                </div>
+                                <span class="font-bold text-lg text-slate-900">How do I post a job?</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="faq-icon h-5 w-5 text-slate-400 group-hover:text-blue-600"></i>
+                        </button>
+                        <div class="faq-content bg-white px-6">
+                            <div class="pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                                Simply sign up for a client account, click "Post a Job," describe your task, set your budget, and our AI will match you with verified workers within seconds. It's that easy.
+                            </div>
                         </div>
-                        <i data-lucide="chevron-down" class="faq-icon h-5 w-5 text-slate-400 group-hover:text-blue-600"></i>
-                    </button>
-                    <div class="faq-content bg-white px-6">
-                        <p class="pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
-                            We use escrow-based transactions. Payment is held securely until the job is completed to satisfaction.
-                        </p>
                     </div>
-                </div>
 
-                <div class="faq-item group border border-slate-200 rounded-2xl overflow-hidden hover:border-blue-300 transition-all duration-300 bg-slate-50">
-                    <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none cursor-pointer" onclick="toggleFaq(this)">
-                        <div class="flex items-center gap-4">
-                            <i data-lucide="users" class="h-5 w-5 text-purple-600"></i>
-                            <span class="font-bold text-lg text-slate-900">What if there's a dispute?</span>
+                    <div class="faq-item group border border-slate-200 rounded-2xl bg-white overflow-hidden hover:border-blue-300 transition-all duration-300 shadow-sm hover:shadow-md">
+                        <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none cursor-pointer" onclick="toggleFaq(this)">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-green-50 p-2 rounded-lg group-hover:bg-green-100 transition-colors">
+                                    <i data-lucide="shield" class="h-5 w-5 text-green-600"></i>
+                                </div>
+                                <span class="font-bold text-lg text-slate-900">Are workers really verified?</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="faq-icon h-5 w-5 text-slate-400 group-hover:text-blue-600"></i>
+                        </button>
+                        <div class="faq-content bg-white px-6">
+                            <div class="pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                                Yes! All workers undergo a rigorous 3-step verification process including KYC verification, government identity checks, and criminal background screening to ensure your safety.
+                            </div>
                         </div>
-                        <i data-lucide="chevron-down" class="faq-icon h-5 w-5 text-slate-400 group-hover:text-blue-600"></i>
-                    </button>
-                    <div class="faq-content bg-white px-6">
-                        <p class="pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
-                            Our AI-assisted moderation team reviews disputes within 72 hours, ensuring fair resolution for both parties.
-                        </p>
+                    </div>
+
+                    <div class="faq-item group border border-slate-200 rounded-2xl bg-white overflow-hidden hover:border-blue-300 transition-all duration-300 shadow-sm hover:shadow-md">
+                        <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none cursor-pointer" onclick="toggleFaq(this)">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-indigo-50 p-2 rounded-lg group-hover:bg-indigo-100 transition-colors">
+                                    <i data-lucide="lock" class="h-5 w-5 text-indigo-600"></i>
+                                </div>
+                                <span class="font-bold text-lg text-slate-900">How is payment protected?</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="faq-icon h-5 w-5 text-slate-400 group-hover:text-blue-600"></i>
+                        </button>
+                        <div class="faq-content bg-white px-6">
+                            <div class="pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                                We use a secure escrow system. When you hire, you deposit funds which are held in a neutral vault. The money is only released to the freelancer once you are 100% satisfied with the work.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item group border border-slate-200 rounded-2xl bg-white overflow-hidden hover:border-blue-300 transition-all duration-300 shadow-sm hover:shadow-md">
+                        <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none cursor-pointer" onclick="toggleFaq(this)">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-purple-50 p-2 rounded-lg group-hover:bg-purple-100 transition-colors">
+                                    <i data-lucide="users" class="h-5 w-5 text-purple-600"></i>
+                                </div>
+                                <span class="font-bold text-lg text-slate-900">What if there's a dispute?</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="faq-icon h-5 w-5 text-slate-400 group-hover:text-blue-600"></i>
+                        </button>
+                        <div class="faq-content bg-white px-6">
+                            <div class="pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                                In the rare event of a disagreement, our AI-assisted moderation team reviews all communication and deliverables. We guarantee a fair resolution within 72 hours for both parties.
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -437,6 +620,58 @@
                 faqItem.classList.add('active');
             }
         }
+
+        // --- CAROUSEL LOGIC ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.getElementById('carousel-track');
+            const slides = Array.from(track.children);
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const dotsNav = document.getElementById('dots-nav');
+            const dots = Array.from(dotsNav.children);
+
+            let currentIndex = 0;
+
+            function updateCarousel() {
+                // Move the track
+                track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                
+                // Update dots
+                dots.forEach((dot, index) => {
+                    if (index === currentIndex) {
+                        dot.classList.add('active');
+                        // Remove dark inactive color
+                        dot.classList.remove('bg-slate-600');
+                    } else {
+                        dot.classList.remove('active');
+                        // Add dark inactive color (instead of slate-300)
+                        dot.classList.add('bg-slate-600');
+                    }
+                });
+            }
+
+            // Click on arrows
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % slides.length; 
+                updateCarousel();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length; 
+                updateCarousel();
+            });
+
+            // Click on dots
+            dotsNav.addEventListener('click', (e) => {
+                const targetDot = e.target.closest('.dot');
+                if (!targetDot) return;
+                currentIndex = dots.indexOf(targetDot);
+                updateCarousel();
+            });
+
+            // Initialize
+            updateCarousel();
+        });
     </script>
 </body>
 </html>
